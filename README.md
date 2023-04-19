@@ -123,9 +123,17 @@ router.post('/', (req, res) => {
 
 Let's try it out in Postman!
 
-Finally, let's make sure that whenever we make a query for users, we see that user's messages as well. Add the following to `models/user.js`:
+Finally, let's make sure that whenever we make a query for users, we see that user's messages as well. 
+
+Replace the existing code in `models/user.js` with the code below. 
+
 
 ```js
+const UserSchema = new Schema({
+  username: { type: String, required: true },
+  password: { type: String, select: false }
+})
+
 UserSchema.pre('findOne', function (next) {
     this.populate('messages')
     next()
@@ -135,4 +143,12 @@ UserSchema.pre('find', function (next) {
     this.populate('messages')
     next()
 })
+
+const User = mongoose.model('User', UserSchema)
+
+module.exports = User
 ```
+
+
+
+
